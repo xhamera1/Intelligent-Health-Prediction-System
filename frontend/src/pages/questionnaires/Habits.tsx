@@ -175,7 +175,7 @@ const Habits = () => {
               />
 
               <TextField
-                label="Intentional exercise (minutes / day)"
+                label="Intentional exercise (minutes per day)"
                 type="number"
                 inputProps={{ inputMode: 'numeric', min: 0, max: 600 }}
                 {...register('exerciseMinutes', {
@@ -192,7 +192,7 @@ const Habits = () => {
               />
 
               <TextField
-                label="Recreational screen time (hours / day)"
+                label="Recreational screen time (hours per day)"
                 type="number"
                 inputProps={{ step: 0.25, min: 0, max: 24 }}
                 {...register('screenTimeHours', {
@@ -243,7 +243,7 @@ const Habits = () => {
               </Box>
 
               <TextField
-                label="Fruit & veggie servings (per day)"
+                label="Fruit and veggies eaten (servings per day)"
                 type="number"
                 inputProps={{ inputMode: 'numeric', min: 0, max: 15 }}
                 {...register('fruitsVeggiesServings', {
