@@ -15,6 +15,7 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
+
 cors:
   allowed:
     origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
@@ -41,3 +42,9 @@ gemini:
 logging:
   level:
     root: INFO
+
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true
