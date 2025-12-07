@@ -49,6 +49,7 @@ const SignupForm = () => {
     demo: DemographicsFormValues
   ): demo is Required<DemographicsFormValues> => {
     return (
+      !!demo.sex &&
       !!demo.dateOfBirth &&
       !!demo.sex &&
       demo.weight.trim().length > 0 &&
@@ -62,6 +63,7 @@ const SignupForm = () => {
 
     if (shouldSendDemographics(demographics)) {
       demographicsPayload = {
+        // @ts-ignore
         sex: sexOptions.indexOf(demographics.sex),
         dateOfBirth: new Date(demographics.dateOfBirth),
         weight: Number(demographics.weight),
@@ -227,9 +229,7 @@ const SignupForm = () => {
           {...register('demographics.weight')}
           error={!!errors.demographics?.weight}
           helperText={
-            errors.demographics?.weight
-              ? 'Please enter a valid weight.'
-              : ' '
+            errors.demographics?.weight ? 'Please enter a valid weight.' : ' '
           }
           fullWidth
         />
@@ -241,9 +241,7 @@ const SignupForm = () => {
           {...register('demographics.height')}
           error={!!errors.demographics?.height}
           helperText={
-            errors.demographics?.height
-              ? 'Please enter a valid height.'
-              : ' '
+            errors.demographics?.height ? 'Please enter a valid height.' : ' '
           }
           fullWidth
         />

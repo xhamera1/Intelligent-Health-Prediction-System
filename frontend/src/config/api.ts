@@ -1,13 +1,5 @@
-const DEFAULT_BASE = 'http://localhost:8080';
-
 function getApiBaseUrl(): string {
-  const envUrl = import.meta.env.VITE_API_BASE_URL;
-
-  if (import.meta.env.PROD && !envUrl) {
-    console.error('VITE_API_BASE_URL is not defined in production environment');
-  }
-
-  const baseUrl = envUrl || DEFAULT_BASE;
+  const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
 
   return baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
 }

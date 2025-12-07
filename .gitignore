@@ -9,6 +9,5 @@
 # VSCode
 .vscode
 
-backend/src/main/resources/application-dev.yml
-backend/src/main/resources/application-dev.yml
-backend/src/main/resources/application-dev.yml
+# Environment files
+.env

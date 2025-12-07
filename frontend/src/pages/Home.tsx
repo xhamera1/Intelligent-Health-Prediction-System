@@ -371,7 +371,6 @@ const Home = () => {
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* 'Welcome' Section */}
       <Box sx={{ mb: 4 }}>
         <Typography
           variant="h3"

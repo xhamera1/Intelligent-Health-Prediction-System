@@ -1,0 +1,42 @@
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist
+build
+.venv
+venv
+env
+
+# IDE
+.vscode
+.idea
+*.iml
+.DS_Store
+
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+*.md
+documentation/
+
+# Notebooks and data
+notebooks/
+data/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Docker
+Dockerfile
+.dockerignore

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.healthapp</groupId>
     <artifactId>health-prediction-backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>health-prediction-backend</name>
     <description>Backend API Gateway for Intelligent Health Prediction System with AI integration and user management
     </description>

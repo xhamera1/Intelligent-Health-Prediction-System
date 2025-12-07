@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: studio-projektowe-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: health-app-db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  python:
+    build: health-prediction-service/.
+    container_name: studio-projektowe-python
+    environment:
+      ALLOWED_ORIGINS: http://backend:8080
+      APP_HOST: 0.0.0.0
+      APP_PORT: 5000
+      APP_RELOAD: true
+  backend:
+    build: backend/.
+    container_name: studio-projektowe-backend
+    env_file:
+      - backend/.env # For gemini api key
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/health-app-db
+      CORS_ALLOWED_ORIGINS: http://localhost:5173
+      HEALTH_PREDICTION_SERVICE_URL: http://python:5000
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - python
+  frontend:
+    build: frontend/.
+    container_name: studio-projektowe-frontend
+    environment:
+      VITE_ENABLE_DEBUG: true
+      VITE_BACKEND_URL: http://localhost:8080
+      VITE_ENV: development
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

@@ -23,7 +23,6 @@
     "@fontsource/inter": "^5.2.8",
     "@fontsource/plus-jakarta-sans": "^5.2.8",
     "@fontsource/roboto-mono": "^5.2.8",
-    "@mobiscroll/react": "npm:@mobiscroll/react-next-trial@^5.35.1",
     "@mui/icons-material": "^7.3.4",
     "@mui/material": "^7.3.4",
     "@mui/x-charts": "^8.16.0",
