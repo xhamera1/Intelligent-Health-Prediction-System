@@ -52,17 +52,35 @@ const getIconConfig = (type: PredictionType) => {
   }
 };
 
+/**
+ * Normalizes probability to percentage format (0-100).
+ * Handles both decimal format (0.0-1.0) and percentage format (0-100).
+ */
+const normalizeProbabilityToPercentage = (probability: number): number => {
+  // If value is less than or equal to 1, assume it's in decimal format (0.0-1.0) and convert to percentage
+  // Otherwise, assume it's already in percentage format (0-100)
+  if (probability <= 1.0) {
+    return probability * 100;
+  }
+  return Math.min(100, Math.max(0, probability)); // Clamp to 0-100 range
+};
+
 const getRiskColor = (probability: number) => {
-  if (probability < 0.33) return 'success';
-  if (probability < 0.66) return 'warning';
+  const percentage = normalizeProbabilityToPercentage(probability);
+  // Green (low risk): < 30%
+  // Orange (medium risk): 30% - 60%
+  // Red (high risk): >= 60%
+  if (percentage < 30) return 'success';
+  if (percentage < 60) return 'warning';
   return 'error';
 };
 
 const getRiskIcon = (probability: number) => {
-  if (probability < 0.33) {
+  const percentage = normalizeProbabilityToPercentage(probability);
+  if (percentage < 30) {
     return <CheckCircleOutlineIcon color="success" fontSize="small" />;
   }
-  if (probability < 0.66) {
+  if (percentage < 60) {
     return <ReportProblemOutlinedIcon color="warning" fontSize="small" />;
   }
   return <ErrorOutlineIcon color="error" fontSize="small" />;
