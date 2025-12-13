@@ -1,134 +1,221 @@
-# Backend — Environment variables
+# Backend Service
 
-This document describes how to provide environment variables for local development and production deployments.
+The backend service is a **Spring Boot 3.5.6** REST API that serves as the core application logic layer and API gateway for the Intelligent Health Prediction System. It handles user authentication, authorization, data persistence, and orchestrates communication with the Python prediction service.
 
-## Overview
+## Key Features
 
-Create a `.env` file in the `backend/` directory that contains all environment variables the application needs. Spring
-will resolve values referenced in `application-prod.yml` (for production) from the environment. Keep secrets out
-of source control.
+- **JWT-based Authentication & Authorization**: Secure user authentication with role-based access control (RBAC)
+- **RESTful API**: Comprehensive REST endpoints for user management, health predictions, and data persistence
+- **API Gateway Pattern**: Centralized entry point that orchestrates requests to microservices
+- **Database Management**: PostgreSQL integration with Flyway for schema versioning and migrations
+- **AI Integration**: Google Gemini API integration for generating personalized health recommendations
+- **OpenAPI Documentation**: Interactive API documentation via Swagger UI
 
-### Development example
+## Technology Stack
 
-Copy `.env.example` to `.env` and update the values:
+- **Java 21** - Programming language
+- **Spring Boot 3.5.6** - Application framework
+- **Spring Security** - Authentication and authorization
+- **Spring Data JPA** - Data persistence layer
+- **PostgreSQL** - Relational database
+- **Flyway** - Database migration management
+- **JWT (jjwt)** - JSON Web Token authentication
+- **OpenFeign** - HTTP client for microservices communication
+- **SpringDoc OpenAPI** - API documentation
+- **Lombok** - Boilerplate reduction
+
+## API Documentation
+
+Interactive API documentation is available via Swagger UI when the service is running:
+
+**Swagger UI**: [http://localhost:8080/swagger-ui/index.html#/](http://localhost:8080/swagger-ui/index.html#/)
+
+**OpenAPI JSON**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+
+> **Note**: Swagger UI is enabled in the `dev` profile. Ensure the backend is running with `SPRING_PROFILES_ACTIVE=dev`.
+
+## API Endpoints Overview
+
+All endpoints are documented in the interactive Swagger UI. Below is a quick reference:
+
+### Authentication
+- `POST /auth/login` - User authentication
+
+### User Management
+- `POST /api/users` - User registration
+- `GET /api/users/{userId}` - Get user details
+- `PUT /api/users/{userId}` - Update user information
+- `DELETE /api/users/{userId}` - Delete user account
+
+### User Demographics
+- `GET /api/users/demographics/{userId}` - Get demographic data
+- `POST /api/users/demographics/{userId}` - Create demographic data
+- `PUT /api/users/demographics/{userId}` - Update demographic data
+
+### Health Predictions
+- `POST /api/predictions/diabetes/{userId}` - Diabetes risk prediction
+- `POST /api/predictions/heart-attack/{userId}` - Heart attack risk prediction
+- `POST /api/predictions/stroke/{userId}` - Stroke risk prediction
+- `POST /api/predictions/habits/{userId}` - Lifestyle habits assessment
+
+### Prediction History
+- `GET /api/prediction-history/{userId}` - Retrieve user's prediction history
+
+> **Note**: For detailed request/response schemas and examples, refer to the [Swagger UI](http://localhost:8080/swagger-ui/index.html#/) or [OpenAPI JSON](http://localhost:8080/v3/api-docs).
+
+## Environment Configuration
+
+The application uses environment variables for configuration. Create a `.env` file in the `backend/` directory:
 
 ```bash
 cp .env.example .env
 ```
 
-Then edit `.env` with your actual configuration values.
+### Required Variables
 
-## PostgreSQL Database
+- `GEMINI_API_KEY` - Google AI Studio API key (required)
+- `JWT_SECRET` - Secret key for JWT token signing (minimum 64 characters recommended)
 
-Use the provided Docker Compose setup to run PostgreSQL locally before starting the application.
+### Optional Gemini Configuration
 
-- Compose file location: `./docker-compose.yml`
-- Service name: `postgres`
-- Exposed port: `5433` (container `5432` → host `5433`)
-- Default credentials and DB (match `application-dev.yml`):
-    - Database: `health-app-db`
-    - Username: `dev-user`
-    - Password: `dev-password`
-
-Prerequisites: Docker Desktop installed and running.
-
-Start the database (from repository root):
-
-```bash
-docker compose up -d
-```
-
-Stop/clean up:
-
-- Stop service: `docker compose stop postgres`
-- Stop and remove: `docker compose down`
-- Remove containers and persistent volume: `docker compose down -v` (this deletes local DB data)
-
-## Flyway Database Migrations
-
-Schema changes are managed with Flyway. Migrations are applied automatically at application startup.
-
-- Migration directory: `backend/src/main/resources/db/migration`
-- File naming convention: `V{version}__{description}.sql` (e.g., `V2__add_user_index.sql`)
-    - Use an incremented integer `version` (1, 2, 3, …)
-    - Use lowercase, underscore-separated `description`
-- Existing baseline: `V1__create_users_table.sql`
-
-When to create a migration:
-
-- Any change to the database schema
-- Data corrections that must run once per environment
-
-How to add a new migration:
-
-1. Determine the next version number (e.g., if latest is `V3`, create `V4__...`).
-2. Create a new `.sql` file in `backend/src/main/resources/db/migration` following the naming convention.
-3. Add the required SQL statements (DDL/DML). **Avoid modifying already-applied migration files.**
-4. Ensure the local PostgreSQL service is running (see "PostgreSQL Database" above).
-5. Start the application; Flyway will apply pending migrations automatically.
-
-### Repairing a Broken Database
-
-If the database schema gets into a broken state during development (e.g., due to a failed migration), you can use
-Flyway's `clean` and 'repair' commands to fix the schema history table.
-
-**Warning:** This command deletes schema history entries for failed migrations. Use with caution.
-
-Run the following command from the `backend/` directory:
-
-```bash
-./mvnw flyway:clean flyway:migrate -Dflyway.cleanDisabled=false -Dflyway.url=jdbc:postgresql://localhost:5432/health-app-db -Dflyway.user=postgres -Dflyway.password=postgres
-```
-
-This command connects to the local development database and attempts to repair the Flyway schema history table.
-
-## Gemini API Configuration
-
-The application uses Google's Gemini API for AI-powered health recommendations.
+- `GEMINI_API_VERSION` - API version (default: `v1beta`)
+- `GEMINI_MODEL` - Model name (default: `gemini-2.0-flash`)
+- `GEMINI_TEMPERATURE` - Randomness control, 0.0-1.0 (default: `0.3`)
+- `GEMINI_TOP_P` - Nucleus sampling (default: `0.90`)
+- `GEMINI_MAX_OUTPUT_TOKENS` - Maximum response length (default: `2048`)
+- `GEMINI_TIMEOUT_MS` - Request timeout in milliseconds (default: `30000`)
 
 ### Obtaining a Gemini API Key
 
 1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
 2. Sign in with your Google account
 3. Create a new API key
-4. Copy the key and add it to your `.env` file as `GEMINI_API_KEY`
+4. Add it to your `.env` file as `GEMINI_API_KEY`
 
-### Gemini Environment Variables
+> **Security Note**: Never commit `.env` files to version control. Keep API keys secure.
 
-Configure the following variables in your `.env` file:
+## Database Setup
 
-- `GEMINI_API_KEY` — Your Google AI Studio API key (required)
-- `GEMINI_API_VERSION` — API version to use (default: `v1beta`)
-- `GEMINI_MODEL` — Model name (default: `gemini-2.0-flash`)
-- `GEMINI_TEMPERATURE` — Controls randomness, 0.0-1.0 (default: `0.2`)
-- `GEMINI_TOP_P` — Nucleus sampling parameter (default: `0.95`)
-- `GEMINI_MAX_OUTPUT_TOKENS` — Maximum response length (default: `2048`)
-- `GEMINI_TIMEOUT_MS` — Request timeout in milliseconds (default: `30000`)
-- `GEMINI_SYSTEM_INSTRUCTION` — System prompt for health advisor behavior
+### Using Docker Compose
 
-See `.env.example` for a complete configuration template.
-
-**Note**: Keep your API key secure and never commit it to version control.
-
-## Loading the `.env` locally (macOS / zsh)
-
-To load variables from `.env` into your current shell session before running the backend:
-
-1. In `zsh`:
+The recommended approach is to use the Docker Compose setup from the project root:
 
 ```bash
-source backend/.env
+docker-compose up -d postgres
 ```
 
-2. Start the PostgreSQL database (from repo root):
+This starts PostgreSQL on port `5433` (host) mapping to `5432` (container).
+
+### Accessing the Database
+
+You can access the PostgreSQL database directly using the `psql` command-line tool:
 
 ```bash
-docker compose up -d postgres
+docker exec -it studio-projektowe-postgres psql -U postgres -d health-app-db
 ```
 
-3. Then run the application (from repo root):
+This command:
+- Connects to the running PostgreSQL container (`studio-projektowe-postgres`)
+- Uses the `postgres` user
+- Connects to the `health-app-db` database
+- Provides an interactive `psql` session
+
+### Database Migrations
+
+Schema changes are managed with **Flyway**. Migrations are applied automatically at application startup.
+
+- **Migration Directory**: `src/main/resources/db/migration`
+- **Naming Convention**: `V{version}__{description}.sql` (e.g., `V1__create_users_table.sql`)
+
+#### Creating a New Migration
+
+1. Determine the next version number (increment from the latest)
+2. Create a new `.sql` file following the naming convention
+3. Add your SQL statements (DDL/DML)
+4. Start the application; Flyway will apply pending migrations automatically
+
+> **Important**: Never modify already-applied migration files. Create new migrations for schema changes.
+
+#### Repairing a Broken Database
+
+If the database schema gets into a broken state, you can use Flyway's repair command:
 
 ```bash
-cd backend
-./mvnw spring-boot:run
+./mvnw flyway:clean flyway:migrate -Dflyway.cleanDisabled=false \
+  -Dflyway.url=jdbc:postgresql://localhost:5433/health-app-db \
+  -Dflyway.user=postgres \
+  -Dflyway.password=postgres
 ```
+
+> **Warning**: This command deletes schema history entries. Use with caution.
+
+## Running the Service
+
+### Using Docker Compose (Recommended)
+
+From the project root:
+
+```bash
+docker-compose up --build backend
+```
+
+### Local Development
+
+1. Ensure PostgreSQL is running (via Docker Compose or locally)
+2. Load environment variables:
+   ```bash
+   # On macOS/Linux (zsh/bash)
+   source backend/.env
+   
+   # On Windows (PowerShell)
+   Get-Content backend/.env | ForEach-Object { $line = $_ -split '='; [Environment]::SetEnvironmentVariable($line[0], $line[1], 'Process') }
+   ```
+3. Run the application:
+   ```bash
+   cd backend
+   ./mvnw spring-boot:run
+   ```
+
+The service will start on `http://localhost:8080` (default port).
+
+## Development Profiles
+
+- **dev** (`application-dev.yml`): Development configuration with Swagger enabled
+- **prod** (`application-prod.yml`): Production configuration
+
+Set the active profile via environment variable:
+```bash
+export SPRING_PROFILES_ACTIVE=dev
+```
+
+## Project Structure
+
+```
+backend/
+├── src/main/java/com/healthapp/backend/
+│   ├── controller/          # REST controllers
+│   ├── service/             # Business logic
+│   ├── repository/          # Data access layer
+│   ├── model/              # Entity models
+│   ├── dto/                # Data transfer objects
+│   ├── config/             # Configuration classes
+│   ├── exception/          # Exception handlers
+│   └── annotation/         # Custom annotations
+├── src/main/resources/
+│   ├── application.yml     # Base configuration
+│   ├── application-dev.yml # Development profile
+│   ├── application-prod.yml # Production profile
+│   └── db/migration/       # Flyway migrations
+└── pom.xml                 # Maven dependencies
+```
+
+## Security
+
+- All endpoints except `/auth/login` and `/api/users` (POST) require JWT authentication
+- Role-based access control (RBAC) with `@IsOwnerOrAdmin` annotation
+- CORS configuration for cross-origin requests
+- Password encryption using BCrypt
+
+## Additional Resources
+
+For comprehensive project documentation, see the main [README.md](../README.md) in the project root.
