@@ -375,9 +375,16 @@ The system follows a microservices architecture pattern, where each service oper
 
 ## Additional Resources
 
-- **Project Plan:** [PROJECT_PLAN.md](docs/PROJECT_PLAN.md)
-- **Testing Documentation:** [TESTING.md](TESTING.md)
-- **Model Documentation:** [health-prediction-service/documentation](./health-prediction-service/documentation/)
+### Module Documentation
+
+- **Backend README:** [backend/README.md](backend/README.md) — Spring Boot API setup, database configuration, Flyway migrations, environment variables, API endpoints, and Swagger documentation
+- **Frontend README:** [frontend/README.md](frontend/README.md) — React application setup, development scripts, environment configuration, component structure, and state management
+- **Health Prediction Service README:** [health-prediction-service/README.md](health-prediction-service/README.md) — FastAPI service setup, ML model information, API endpoints, model loading, and configuration
+
+### Additional Documentation
+
+- **Testing Documentation:** [TESTING.md](TESTING.md) — Test setup, running tests, test coverage, and testing best practices
+- **Model Documentation:** [health-prediction-service/documentation](./health-prediction-service/documentation/) — Detailed technical documentation for each ML model including training methodology, performance metrics, and feature analysis
 
 ---
 
