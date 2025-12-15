@@ -22,6 +22,7 @@ import {
   MonitorHeart,
   Spa
 } from '@mui/icons-material';
+import { AdminPanelSettings } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useThemeContext } from '../../contexts/ThemeContextProvider';
 import { useApplicationContext } from '../../contexts/ApplicationContextProvider';
@@ -72,7 +73,7 @@ const predictionItems = [
 export const SideMenu = () => {
   const navigate = useNavigate();
   const { mode, toggleTheme } = useThemeContext();
-  const { setUser, saveAuthentication } = useApplicationContext();
+  const { setUser, saveAuthentication, user } = useApplicationContext();
 
   const handleLogout = () => {
     setUser(null);
@@ -130,6 +131,19 @@ export const SideMenu = () => {
               </ListItemButton>
             </ListItem>
           ))}
+          {user?.role !== 'ADMIN' && ( // TO BE CHANGED!!!
+            <>
+              <Divider />
+              <ListItem disablePadding>
+                <ListItemButton onClick={() => navigate('/admin')}>
+                  <ListItemIcon>
+                    <AdminPanelSettings />
+                  </ListItemIcon>
+                  <ListItemText primary="Admin Panel" />
+                </ListItemButton>
+              </ListItem>
+            </>
+          )}
         </List>
 
         <Box sx={{ flexGrow: 1 }} />
