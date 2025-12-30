@@ -167,3 +167,10 @@ export type SelectedPrediction =
   | { type: 'heartAttack'; record: HeartAttackPredictionRecord }
   | { type: 'habits'; record: HabitsAssessmentRecord }
   | null;
+
+export type PagedUsers = {
+  content: User[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
+};

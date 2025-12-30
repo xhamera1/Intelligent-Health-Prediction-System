@@ -131,7 +131,7 @@ export const SideMenu = () => {
               </ListItemButton>
             </ListItem>
           ))}
-          {user?.role !== 'ADMIN' && ( // TO BE CHANGED!!!
+          {user?.role == 'ADMIN' && (
             <>
               <Divider />
               <ListItem disablePadding>

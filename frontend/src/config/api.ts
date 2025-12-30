@@ -20,5 +20,6 @@ export const ENDPOINTS = {
   PREDICTION_HISTORY: apiUrl('/api/prediction-history'),
   USERS: apiUrl('/api/users'),
   USER_DEMOGRAPHICS: apiUrl('/api/users/demographics'),
-  LOGIN: apiUrl('/auth/login')
+  LOGIN: apiUrl('/auth/login'),
+  ADMIN_USERS: apiUrl('api/admin_users')
 } as const;
