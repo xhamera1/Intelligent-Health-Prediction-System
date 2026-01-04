@@ -1,55 +1,46 @@
-import {
-	Box,
-	Typography,
-	Card,
-	CardContent,
-	Stack,
-	Switch,
-	Button,
-	Divider
-} from '@mui/material';
+import { Box, Typography, Card, CardContent, Stack, Switch, Button, Divider } from '@mui/material';
+
 import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
-import {
-	Assessment,
-	FileDownload,
-	Person,
-	Group
-} from '@mui/icons-material';
-import { useState } from 'react';
+import { Assessment, FileDownload, Person, Group } from '@mui/icons-material';
+import { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { useNavigate } from 'react-router-dom';
+
+import { useAdminUsers } from '../hooks/useAdminUsers';
+import { useAdminStats } from "../hooks/useAdminStats.ts";
+import type { Stats } from "../utils/types.ts"
+import { safeNumber } from "../utils/functions.ts";
 
 export default function AdminDashboard() {
 	const { user } = useApplicationContext();
 	const navigate = useNavigate();
 	const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-	const [stats, setStats] = useState({
-		totalUsers: '%NaN%',
-		totalPredictions: '%NaN%',
-		activeUsers: '%NaN%',
+
+	const { data: usersData } = useAdminUsers(0, 1);
+	const [stats, setStats] = useState<Stats>({
+		totalUsers: 0,
+		totalPredictions: 0,
+		activeUsers: 1,
 		maintenanceMode: false,
 		predictions: {
-			volume: {
-				perDay: '%NaN%',
-				diabetes: '%NaN%',
-				heart: '%NaN%',
-				stroke: '%NaN%',
-				habits: '%NaN%'
-			},
-			distribution: {
-				highRisk: '%NaN%',
-				averageRisk: '%NaN%',
-				lowRisk: '%NaN%'
-			}
+			volume: { perDay: 0, diabetes: 0, heart: 0, stroke: 0, habits: 0 },
 		},
-		logins: {
-			last30Days: Array(30).fill('%NaN%') // lub liczby z API
-		}
+		logins: { last30Days: Array(30).fill(1) }
 	});
-	const safeNumber = (value: unknown): number => {
-		const num = Number(value);
-		return Number.isFinite(num) && num > 0 ? num : 1;
-	};
+
+	const { data: adminStats } = useAdminStats();
+
+	useEffect(() => {
+		if (usersData || adminStats) {
+			setStats((prev) => ({
+				...prev,
+				totalUsers: usersData ? usersData.totalElements : prev.totalUsers,
+				totalPredictions: adminStats ? adminStats.totalPredictions : prev.totalPredictions,
+				predictions: adminStats ? adminStats.predictions : prev.predictions,
+			}));
+		}
+	}, [usersData, adminStats]);
+
 	const pieData = [
 		{ name: 'Diabetes', value: safeNumber(stats.predictions.volume.diabetes) },
 		{ name: 'Heart Attack', value: safeNumber(stats.predictions.volume.heart) },
@@ -58,6 +49,7 @@ export default function AdminDashboard() {
 	];
 	const loginData = stats.logins.last30Days.map(safeNumber);
 	const maxLogins = Math.max(...loginData, 1);
+
 	return (
 		<Box sx={{ p: 3 }}>
 			<Typography variant="h4" gutterBottom>
@@ -249,8 +241,6 @@ export default function AdminDashboard() {
 							/>
 						</CardContent>
 					</Card>
-
-
 
 					<Button variant="outlined" startIcon={<FileDownload />} disabled>
 						Export Data

@@ -5,6 +5,8 @@ import com.healthapp.backend.dto.predictionHistory.DiabetesPredictionResponse;
 import com.healthapp.backend.dto.predictionHistory.HeartAttackPredictionResponse;
 import com.healthapp.backend.dto.predictionHistory.PredictionHistoryResponse;
 import com.healthapp.backend.dto.predictionHistory.StrokePredictionResponse;
+import com.healthapp.backend.dto.predictionHistory.AdminPredictionHistoryResponse;
+import org.springframework.data.domain.Pageable;
 import com.healthapp.backend.repository.DiabetesRepository;
 import com.healthapp.backend.repository.HabitAssessmentRepository;
 import com.healthapp.backend.repository.HeartAttackRepository;
@@ -12,6 +14,9 @@ import com.healthapp.backend.repository.StrokeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +52,32 @@ public class PredictionHistoryService {
                 heartAttackPredictionHistory,
                 habitsHistory
         );
+    }
+
+    @Transactional(readOnly = true)
+    public AdminPredictionHistoryResponse getPredictionHistoryForAll(Pageable pageable) {
+        var heartPage = heartAttackRepository.findAll(pageable).map(HeartAttackPredictionResponse::createHeartAttackPredictionResponseFrom);
+        var diabetesPage = diabetesRepository.findAll(pageable).map(DiabetesPredictionResponse::createDiabetesPredictionResponseFrom);
+        var strokePage = strokeRepository.findAll(pageable).map(StrokePredictionResponse::createStrokePredictionResponseFrom);
+        var habitsPage = habitAssessmentRepository.findAll(pageable).map(HabitsPredictionResponse::from);
+        long totalCurrentDayPredictions = getPredictionSummaryForDate(LocalDate.now());
+        return new AdminPredictionHistoryResponse(
+                heartPage,
+                diabetesPage,
+                strokePage,
+                habitsPage,
+                totalCurrentDayPredictions
+        );
+    }
+
+    public long getPredictionSummaryForDate(LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = start.plusDays(1);
+        long heart = heartAttackRepository.countByCreatedAtBetween(start, end);
+        long diabetes = diabetesRepository.countByCreatedAtBetween(start, end);
+        long strokes = strokeRepository.countByCreatedAtBetween(start, end);
+        long habits = habitAssessmentRepository.countByCreatedAtBetween(start, end);
+
+        return heart + diabetes + strokes + habits;
     }
 }

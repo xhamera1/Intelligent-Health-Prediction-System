@@ -48,9 +48,17 @@ export const adminService = {
     deleteUser: async (token: string, userId: number): Promise<void> => {
         return fetchApi(`${ENDPOINTS.ADMIN_USERS}/${userId}`, {
             method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` }
+        });
+    },
+
+    getAllPredictionHistory: async (token: string, page: number, size: number) => {
+        const url = new URL(ENDPOINTS.PREDICTION_HISTORY);
+        url.searchParams.append("page", page.toString());
+        url.searchParams.append("size", size.toString());
+
+        return fetchApi(url.toString(), {
+            headers: { Authorization: `Bearer ${token}` }
         });
     }
 }

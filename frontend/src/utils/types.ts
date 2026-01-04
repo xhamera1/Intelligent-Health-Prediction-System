@@ -174,3 +174,21 @@ export type PagedUsers = {
   totalElements: number;
   number: number;
 };
+export type Stats = {
+		totalUsers: number;
+		totalPredictions: number;
+		activeUsers: number;
+		maintenanceMode: boolean;
+		predictions: {
+			volume: {
+				perDay: number;
+				diabetes: number;
+				heart: number;
+				stroke: number;
+				habits: number;
+			};
+		};
+		logins: {
+			last30Days: number[];
+		};
+	};
