@@ -337,6 +337,9 @@ To stop and remove volumes (deletes database data):
 docker-compose down -v
 ```
 
+### Accessing the Admin Panel for the first time in the dev-profile
+Initial development-version admin profile is created automatically
+- for the credentials see: **[Admin CONFIG File](./backend/src/main/java/com/healthapp/backend/config/DevAdminConfig.java)**
 ### Service-Specific Documentation
 
 For detailed setup instructions and configuration options for individual services, refer to:
