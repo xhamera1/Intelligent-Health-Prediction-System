@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { useNavigate } from 'react-router-dom';
 
+
 import { useAdminUsers } from '../hooks/useAdminUsers';
 import { useAdminStats } from "../hooks/useAdminStats.ts";
 import type { Stats } from "../utils/types.ts"
@@ -52,6 +53,24 @@ export default function AdminDashboard() {
 	];
 	const registrationData = stats.registrations.last30Days;
 	const maxRegistrations = Math.max(...registrationData, 1);
+
+	const [fileContent, setFileContent] = useState<string | null>(null);
+	useEffect(() => {
+		const jsonString = JSON.stringify(stats, null, 2);
+		setFileContent(jsonString);
+	}, [stats]);
+
+	const handleDownload = () => {
+		if (!fileContent) return;
+
+		const blob = new Blob([fileContent], { type: 'application/json;charset=utf-8' });
+		const url = window.URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = 'data.json';
+		link.click();
+		window.URL.revokeObjectURL(url);
+	};
 
 	return (
 		<Box sx={{ p: 3 }}>
@@ -245,7 +264,7 @@ export default function AdminDashboard() {
 						</CardContent>
 					</Card>
 
-					<Button variant="outlined" startIcon={<FileDownload />} disabled>
+					<Button variant="outlined" startIcon={<FileDownload />} onClick={handleDownload} disabled={!fileContent} >
 						Export Data
 					</Button>
 				</Stack>
