@@ -16,6 +16,7 @@ export const useAdminStats = () => {
             const diabetes = data.diabetes?.totalElements ?? 0;
             const strokes = data.strokes?.totalElements ?? 0;
             const habits = data.habits?.totalElements ?? 0;
+            const registersList = await adminService.get30DaysRegistrations(token);
             return {
                 totalPredictions: heart + diabetes + strokes + habits,
                 predictions : {
@@ -27,6 +28,7 @@ export const useAdminStats = () => {
                         habits: habits
                     },
                 },
+                registrationsLast30Days: registersList
             };
         },
         enabled: !!token && isUserAuthenticated,

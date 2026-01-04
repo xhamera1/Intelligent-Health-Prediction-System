@@ -9,6 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.healthapp.backend.dto.user.UserResponse.createUserResponseFrom;
 
 @Service
@@ -29,6 +34,16 @@ public class AdminService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
         return createUserResponseFrom(user);
+    }
+    public List<Long> getLast30DaysRegistrations () {
+        LocalDateTime end = LocalDate.now().atStartOfDay();
+        LocalDateTime index = end.minusDays(29);
+        List<Long> newRegisters = new ArrayList<>();
+        while (index.isBefore(end.plusDays(1))) {
+            newRegisters.add(userRepository.countByCreatedAtGreaterThanEqualAndCreatedAtLessThan(index,index.plusDays(1)));
+            index = index.plusDays(1);
+        }
+        return newRegisters;
     }
 
 

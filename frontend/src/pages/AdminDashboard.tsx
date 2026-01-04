@@ -25,7 +25,7 @@ export default function AdminDashboard() {
 		predictions: {
 			volume: { perDay: 0, diabetes: 0, heart: 0, stroke: 0, habits: 0 },
 		},
-		logins: { last30Days: Array(30).fill(1) }
+		registrations: { last30Days: Array(30).fill(1) }
 	});
 
 	const { data: adminStats } = useAdminStats();
@@ -37,6 +37,9 @@ export default function AdminDashboard() {
 				totalUsers: usersData ? usersData.totalElements : prev.totalUsers,
 				totalPredictions: adminStats ? adminStats.totalPredictions : prev.totalPredictions,
 				predictions: adminStats ? adminStats.predictions : prev.predictions,
+				registrations: {
+					last30Days: adminStats? adminStats.registrationsLast30Days : prev.registrations.last30Days
+				}
 			}));
 		}
 	}, [usersData, adminStats]);
@@ -47,8 +50,8 @@ export default function AdminDashboard() {
 		{ name: 'Stroke', value: safeNumber(stats.predictions.volume.stroke) },
 		{ name: 'Habits', value: safeNumber(stats.predictions.volume.habits) }
 	];
-	const loginData = stats.logins.last30Days.map(safeNumber);
-	const maxLogins = Math.max(...loginData, 1);
+	const registrationData = stats.registrations.last30Days;
+	const maxRegistrations = Math.max(...registrationData, 1);
 
 	return (
 		<Box sx={{ p: 3 }}>
@@ -135,7 +138,7 @@ export default function AdminDashboard() {
 					<Card>
 						<CardContent>
 							<Typography variant="h6" gutterBottom>
-								New Logins – Last 30 Days
+								New Accounts – Last 30 Days' Registrations
 							</Typography>
 							<Divider sx={{ mb: 2 }} />
 
@@ -150,18 +153,18 @@ export default function AdminDashboard() {
 										fill="none"
 										stroke="currentColor"
 										strokeWidth="2"
-										points={loginData
+										points={registrationData
 											.map((value, index) => {
-												const x = (index / (loginData.length - 1)) * 300;
-												const y = 100 - (value / maxLogins) * 90;
+												const x = (index / (registrationData.length - 1)) * 300;
+												const y = 100 - (value / maxRegistrations) * 90;
 												return `${x},${y}`;
 											})
 											.join(' ')}
 									/>
 
-									{loginData.map((value, index) => {
-										const x = (index / (loginData.length - 1)) * 300;
-										const y = 100 - (value / maxLogins) * 90;
+									{registrationData.map((value, index) => {
+										const x = (index / (registrationData.length - 1)) * 300;
+										const y = 100 - (value / maxRegistrations) * 90;
 										return (
 											<circle
 												key={index}
@@ -180,7 +183,7 @@ export default function AdminDashboard() {
 								color="text.secondary"
 								sx={{ mt: 1, display: 'block' }}
 							>
-								Missing data treated as 1
+								Missing data treated as 0
 							</Typography>
 						</CardContent>
 					</Card>

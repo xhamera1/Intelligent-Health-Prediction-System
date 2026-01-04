@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -44,5 +46,10 @@ public class AdminController {
     @DeleteMapping(value = "/{userId}", produces = APPLICATION_JSON_VALUE)
     public void deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
+    }
+
+    @GetMapping(value = "/last30Days", produces = APPLICATION_JSON_VALUE)
+    public List<Long> getLast30DaysRegistrations() {
+        return adminService.getLast30DaysRegistrations();
     }
 }

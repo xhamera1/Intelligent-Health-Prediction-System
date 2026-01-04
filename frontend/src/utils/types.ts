@@ -188,7 +188,7 @@ export type Stats = {
 				habits: number;
 			};
 		};
-		logins: {
+		registrations: {
 			last30Days: number[];
 		};
 	};

@@ -21,5 +21,6 @@ export const ENDPOINTS = {
   USERS: apiUrl('/api/users'),
   USER_DEMOGRAPHICS: apiUrl('/api/users/demographics'),
   LOGIN: apiUrl('/auth/login'),
-  ADMIN_USERS: apiUrl('api/admin_users')
+  ADMIN_USERS: apiUrl('api/admin_users'),
+  NEW_REGISTRATIONS: apiUrl('api/admin_users/last30Days')
 } as const;

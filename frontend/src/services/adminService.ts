@@ -60,5 +60,12 @@ export const adminService = {
         return fetchApi(url.toString(), {
             headers: { Authorization: `Bearer ${token}` }
         });
+    },
+
+    get30DaysRegistrations: async (token: string): Promise<number[]> => {
+        const url = new URL(ENDPOINTS.NEW_REGISTRATIONS);
+        return fetchApi(url.toString(), {
+            headers: { Authorization: `Bearer ${token}` },
+        });
     }
 }
