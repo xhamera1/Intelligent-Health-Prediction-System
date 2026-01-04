@@ -222,11 +222,26 @@ The account page allows users to:
 
 ### Admin Panel
 
-**[Work In Progress / TODO]**
 
-The Admin Panel module is currently under development. Planned features include:
-- User management and administration
-- ... TODO
+
+The Admin Panel module offers system administrators to overview crucial user statistics such as:
+- Number of Users
+- Numbers of done Questionnaires with separation for distinct types
+- Daily amount of finished Questionnaires
+- Chart of new account registrations from latest 30 days.
+- **[TODO]** At the moment Active Users Box always shows one which needs to be changed.
+- **[TODO]** Option for toggling Maintenance Mode is currently under development.
+It is planned that it will allow the Administrator to temporarily shut down part of the system for updates, repairs or maintenance. 
+End users would receive a message informing them of the system's unavailability and the estimated time to restore it.
+
+![Admin Panel Screenshot](docs/screenshots/admin_dashboard_overview.png)
+
+The Administrator is also offered a possibility to manage user accounts, such as editing Names and Roles.
+
+![Admin Users Panel Screenshot](docs/screenshots/user_dashboard_overview.png)
+
+![Edit user data window](docs/screenshots/edit_user_data.png)
+
 
 ---
 
