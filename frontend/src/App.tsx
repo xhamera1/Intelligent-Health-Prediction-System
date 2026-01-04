@@ -10,6 +10,9 @@ import ProtectedRoutes from './routes/ProtectedRoutes.tsx';
 import PredictionHistory from './pages/PredictionHistory.tsx';
 import AppLayout from './components/AppLayout.tsx';
 import { ThemeContextProvider } from './contexts/ThemeContextProvider.tsx';
+import AdminRoute from "./routes/AdminRoutes.tsx";
+import AdminDashboard from "./pages/AdminDashboard.tsx";
+import UsersDashboard from "./pages/UsersDashboard.tsx";
 
 function App() {
   return (
@@ -22,6 +25,8 @@ function App() {
             <Route element={<ProtectedRoutes />}>
               <Route path={'/'} element={<Home />} />
               <Route path={'/account'} element={<Account />} />
+              <Route path={'/admin'} element={<AdminRoute><AdminDashboard/></AdminRoute>} />
+              <Route path={'/admin/users'} element={<AdminRoute><UsersDashboard/></AdminRoute>}/>
               <Route
                 path={'/prediction-history'}
                 element={<PredictionHistory />}

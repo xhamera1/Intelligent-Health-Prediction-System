@@ -167,3 +167,28 @@ export type SelectedPrediction =
   | { type: 'heartAttack'; record: HeartAttackPredictionRecord }
   | { type: 'habits'; record: HabitsAssessmentRecord }
   | null;
+
+export type PagedUsers = {
+  content: User[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
+};
+export type Stats = {
+		totalUsers: number;
+		totalPredictions: number;
+		activeUsers: number;
+		maintenanceMode: boolean;
+		predictions: {
+			volume: {
+				perDay: number;
+				diabetes: number;
+				heart: number;
+				stroke: number;
+				habits: number;
+			};
+		};
+		registrations: {
+			last30Days: number[];
+		};
+	};

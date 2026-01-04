@@ -62,6 +62,22 @@ public class UserService {
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
 
+        if (request.role() != null) {
+            var authentication = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+            boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                    .map(org.springframework.security.core.GrantedAuthority::getAuthority)
+                    .anyMatch(role -> role.equals("ROLE_ADMIN"));
+            if (!isAdmin) {
+                throw new org.springframework.security.access.AccessDeniedException("Only admins can change roles");
+            }
+
+            try {
+                user.setRole(com.healthapp.backend.model.User.Role.valueOf(request.role()));
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid role: " + request.role());
+            }
+        }
+
         var updatedUser = userRepository.save(user);
         return createUserResponseFrom(updatedUser);
     }

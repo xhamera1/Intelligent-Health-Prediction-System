@@ -1,24 +1,11 @@
 import { useMemo } from 'react';
 import {
-  Box,
-  Card,
-  CardContent,
-  Container,
-  Typography,
-  CircularProgress,
-  Chip,
-  Stack,
-  Divider,
-  Alert,
-  Paper,
+  Box, Card, CardContent, Container, Typography,
+  CircularProgress, Chip, Stack, Divider,
+  Alert, Paper,
 } from '@mui/material';
-import {
-  MonitorHeart,
-  Bloodtype,
-  Spa,
-  Assessment,
-  Person, Grain,
-} from '@mui/icons-material';
+import { MonitorHeart, Bloodtype, Spa, Assessment, Person, Grain } from '@mui/icons-material';
+
 import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
 import { usePredictionHistory } from '../hooks/usePredictionHistory.ts';
 import { useUserDemographicsQuery } from '../hooks/useUserDemographicsQuery.ts';
@@ -29,42 +16,12 @@ import type {
   StrokePredictionRecord,
   HabitsAssessmentRecord,
 } from '../utils/types.ts';
-import {
-  formatDateTime,
-  formatProbability,
-  formatWellnessScore,
-} from '../utils/formatters.ts';
+import {normalizeProbabilityToPercentage} from "../utils/functions.ts";
+import { formatDateTime, formatProbability, formatWellnessScore } from '../utils/formatters.ts';
 import { calculateAgeFromDateOfBirth } from '../utils/profile.ts';
 import WellnessTrendChart from '../components/home/WellnessTrendChart.tsx';
 import CombinedRiskChart from '../components/home/CombinedRiskChart.tsx';
 import RiskTrendChart from "../components/home/RiskTrendChart.tsx";
-
-/**
- * Normalizes a probability value to percentage format (0-100).
- * If value is less than 1, assumes it's in decimal format and multiplies by 100.
- * Handles edge cases like negative values and values > 100.
- * @param value - Probability value (either 0.0-1.0 or 0-100)
- * @returns Percentage value (0-100)
- */
-const normalizeProbabilityToPercentage = (
-  value: number | null | undefined
-): number => {
-  if (value == null || Number.isNaN(value)) {
-    return 0;
-  }
-
-  // Handle negative values
-  if (value < 0) {
-    return 0;
-  }
-
-  // If value is less than 1, assume it's in decimal format (0.0-1.0) and convert to percentage
-  // Otherwise, assume it's already in percentage format (0-100)
-  const percentage = value < 1.0 ? value * 100 : value;
-
-  // Clamp to valid range [0, 100]
-  return Math.max(0, Math.min(100, percentage));
-};
 
 const Home = () => {
   const { user, isUserAuthenticated } = useApplicationContext();
