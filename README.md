@@ -229,8 +229,8 @@ The Admin Panel module offers system administrators to overview crucial user sta
 - Numbers of done Questionnaires with separation for distinct types
 - Daily amount of finished Questionnaires
 - Chart of new account registrations from latest 30 days.
-- **[TODO]** At the moment Active Users Box always shows one which needs to be changed.
-- **[TODO]** Option for toggling Maintenance Mode is currently under development.
+- **[Future improvement]** At the moment Active Users Box always shows one which needs to be changed.
+- **[Future improvement]** Option for toggling Maintenance Mode is currently under development.
 It is planned that it will allow the Administrator to temporarily shut down part of the system for updates, repairs or maintenance. 
 End users would receive a message informing them of the system's unavailability and the estimated time to restore it.
 
