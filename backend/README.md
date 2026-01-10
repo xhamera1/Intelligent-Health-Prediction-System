@@ -60,6 +60,14 @@ All endpoints are documented in the interactive Swagger UI. Below is a quick ref
 
 ### Prediction History
 - `GET /api/prediction-history/{userId}` - Retrieve user's prediction history
+- `GET /api/prediction-history` - Retrieve all users' prediction history (Admin only)
+
+### Admin Management
+- `GET /api/admin_users` - Get all users (paginated, Admin only)
+- `GET /api/admin_users/{userId}` - Get user details by ID (Admin only)
+- `PUT /api/admin_users/{userId}` - Update any user's information (Admin only)
+- `DELETE /api/admin_users/{userId}` - Delete any user account (Admin only)
+- `GET /api/admin_users/last30Days` - Get daily user registration counts for the last 30 days (Admin only)
 
 > **Note**: For detailed request/response schemas and examples, refer to the [Swagger UI](http://localhost:8080/swagger-ui/index.html#/) or [OpenAPI JSON](http://localhost:8080/v3/api-docs).
 

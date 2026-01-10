@@ -31,6 +31,8 @@ The Intelligent Health Prediction System is a containerized, distributed applica
 
 3. **Python Prediction Service** — A dedicated FastAPI microservice responsible for machine learning model inference. This service loads pre-trained models and performs health risk predictions based on user-submitted questionnaire data.
 
+![System Architecture Diagram](docs/screenshots/architecture_diagram.png)
+
 ### Authentication & Security
 
 The system implements **JWT (JSON Web Token)**-based authentication and authorization. Users authenticate through secure login endpoints, and all protected API routes require valid JWT tokens. The backend enforces role-based access control (RBAC), supporting both regular users and administrators.
@@ -222,25 +224,47 @@ The account page allows users to:
 
 ### Admin Panel
 
+The Admin Panel provides system administrators with comprehensive oversight and management capabilities for the health prediction system.
 
+#### Admin Dashboard Overview
 
-The Admin Panel module offers system administrators to overview crucial user statistics such as:
-- Number of Users
-- Numbers of done Questionnaires with separation for distinct types
-- Daily amount of finished Questionnaires
-- Chart of new account registrations from latest 30 days.
-- **[Future improvement]** At the moment Active Users Box always shows one which needs to be changed.
-- **[Future improvement]** Option for toggling Maintenance Mode is currently under development.
-It is planned that it will allow the Administrator to temporarily shut down part of the system for updates, repairs or maintenance. 
-End users would receive a message informing them of the system's unavailability and the estimated time to restore it.
+The main admin dashboard offers real-time system statistics and analytics:
+
+- **User Statistics**: Total number of registered users in the system
+- **Prediction Analytics**: Comprehensive breakdown of all health predictions including:
+  - Total number of predictions across all types
+  - Daily prediction volume
+  - Categorized counts by prediction type (Diabetes, Heart Attack, Stroke, Habits Assessment)
+- **Questionnaire Usage Visualization**: Interactive pie chart displaying the distribution of completed questionnaires by type
+- **Registration Trends**: 30-day historical chart showing daily user registration activity
+- **Data Export**: Ability to export dashboard statistics as JSON for reporting and analysis
 
 ![Admin Panel Screenshot](docs/screenshots/admin_dashboard_overview.png)
 
-The Administrator is also offered a possibility to manage user accounts, such as editing Names and Roles.
+#### User Account Management
+
+Administrators can manage all user accounts with the following capabilities:
+
+- **View All Users**: Access a paginated list of all registered users in the system
+- **Edit User Information**: Modify user details including:
+  - First name and last name
+  - User role (USER or ADMIN)
+- **Delete User Accounts**: Remove user accounts from the system
+- **Access User Data**: View individual user details and information
 
 ![Admin Users Panel Screenshot](docs/screenshots/user_dashboard_overview.png)
 
 ![Edit user data window](docs/screenshots/edit_user_data.png)
+
+#### Administrative Permissions
+
+Administrators have elevated permissions that allow them to:
+
+- View prediction history for any user in the system
+- Access all user demographic data
+- Modify any user account, regardless of ownership
+- View system-wide analytics and statistics
+- Export system data for administrative purposes
 
 
 ---
