@@ -3,7 +3,21 @@ import { Box, Button, Card, CardContent, Divider, Stack, Typography } from '@mui
 import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
 import { Assessment, FileDownload, Group, Person } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
-import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts';
 import { useNavigate } from 'react-router-dom';
 
 import { useAdminUsers } from '../hooks/useAdminUsers';
@@ -173,37 +187,58 @@ export default function AdminDashboard() {
               <Box
                 sx={{
                   width: '100%',
-                  height: 200
+                  height: 300,
+                  mt: 2
                 }}
               >
-                <svg viewBox="0 0 300 100" width="100%" height="100%">
-                  <polyline
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    points={registrationData
-                      .map((value, index) => {
-                        const x = (index / (registrationData.length - 1)) * 300;
-                        const y = 100 - (value / maxRegistrations) * 90;
-                        return `${x},${y}`;
-                      })
-                      .join(' ')}
-                  />
-
-                  {registrationData.map((value, index) => {
-                    const x = (index / (registrationData.length - 1)) * 300;
-                    const y = 100 - (value / maxRegistrations) * 90;
-                    return (
-                      <circle
-                        key={index}
-                        cx={x}
-                        cy={y}
-                        r={2}
-                        fill="currentColor"
-                      />
-                    );
-                  })}
-                </svg>
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart
+                    data={registrationData.map((value, index) => ({
+                      day: 30 - index,
+                      registrations: value
+                    }))}
+                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                  >
+                    <defs>
+                      <linearGradient
+                        id="colorRegistrations"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="5%"
+                          stopColor="#0088FE"
+                          stopOpacity={0.8}
+                        />
+                        <stop
+                          offset="95%"
+                          stopColor="#0088FE"
+                          stopOpacity={0}
+                        />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="day"
+                      label={{
+                        value: 'Days ago',
+                        position: 'insideBottomRight',
+                        offset: -10
+                      }}
+                    />
+                    <YAxis allowDecimals={false} />
+                    <Tooltip />
+                    <Area
+                      type="monotone"
+                      dataKey="registrations"
+                      stroke="#0088FE"
+                      fillOpacity={1}
+                      fill="url(#colorRegistrations)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
               </Box>
 
               <Typography
